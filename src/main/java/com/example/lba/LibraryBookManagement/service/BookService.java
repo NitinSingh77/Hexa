@@ -1,31 +1,40 @@
 package com.example.lba.LibraryBookManagement.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.lba.LibraryBookManagement.exception.InvalidCredentialsException;
 import com.example.lba.LibraryBookManagement.model.Book;
+import com.example.lba.LibraryBookManagement.model.User;
 import com.example.lba.LibraryBookManagement.repository.BookRepository;
-
-import java.util.List;
 
 @Service
 public class BookService {
 
-    @Autowired
-    private BookRepository bookRepository;
+	
+	@Autowired
+	private BookRepository bookRepository;
+public User authenticate(String username, String password) throws InvalidCredentialsException {
+		
+		return bookRepository.authenticate(username, password);
+	}
 
-    // Fetch all books from the repository
-    public List<Book> fetchAllBooks() {
-        return bookRepository.fetchAllBooks();
-    }
 
-    // Save a book into the database
-    public void saveBook(Book book) {
-        bookRepository.addBook(book);
-    }
+	public void addBook(String username, Book book, String genre) {
+		int user_id= bookRepository.getUserId(username);
+		System.out.println(user_id);
+		
+		int genre_id= bookRepository.getgenreId(genre);
+		bookRepository.addBook(user_id, genre_id, book);
+		
+		
+	}
 
-    // Delete a book by its ID
-    public void deleteBookById(int id) {
-        bookRepository.deleteBook(id);
-    }
+
+	public List<Book> fetchBook(String username) {
+		
+		return bookRepository.fetchExpense(username);
+	}
 }
